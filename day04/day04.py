@@ -1,5 +1,7 @@
 # puzzle input is 168630-718098
 
+# 896 too low for part 2
+
 options = list(range(168630, 718099))
 
 def get_digits(num):
@@ -17,12 +19,25 @@ count = 0
 for num in options:
     digits = get_digits(num)
     pair_valid = False
+    triple_valid = True
     decrease_valid = True
-    for idx in range(5):
-        if digits[idx] == digits[idx + 1]:
+    for digit in digits:
+        if digits.count(digit) == 2:
             pair_valid = True
-        if digits[idx + 1] < digits[idx]:
-            decrease_valid = False
+    for idx in range(6):
+        if idx < 5:
+            if digits[idx + 1] < digits[idx]:
+                decrease_valid = False
+        # if idx < 2:
+        #     continue
+        # if digits[idx] == digits[idx - 1] and digits[idx] != digits[idx - 2]:
+        #     pair_valid = True
+        # if digits[idx] == digits[idx - 1] and digits[idx] == digits[idx - 2]:
+        #     triple_valid = False
+        #     pair_valid = False
+
+
+
     if pair_valid and decrease_valid:
         print(num)
         count += 1
