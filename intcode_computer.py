@@ -98,3 +98,6 @@ class Intcode_Computer():
                 break
 
         return self.output
+
+    def __repr__(self):
+        return f'Intcode_Computer({self.inputs})'
