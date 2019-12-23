@@ -5,6 +5,8 @@ class Intcode_Computer():
     def __init__(self, program):
         self.program = program
         self.inputs = []
+        self.phase = -1
+        self.halted = False
 
     def add_input(self, input):
         self.inputs.append(input)
@@ -30,7 +32,10 @@ class Intcode_Computer():
         program[program[idx + 3]] = p3
 
     def input_opcode(self, idx, program):
-        program[program[idx + 1]] = self.inputs.pop(0)
+        if idx == 0:
+            program[program[idx + 1]] = self.phase
+        else:
+            program[program[idx + 1]] = self.inputs[0]
 
     def output_opcode(self, idx, program, param_flags):
         p1 = self.get_one_param(idx, program, param_flags)
@@ -75,6 +80,7 @@ class Intcode_Computer():
                 idx += 2
             elif opcode == 4:
                 self.output_opcode(idx, self.program, param_flags)
+                yield self.output
                 idx += 2
             elif opcode == 5:
                 new_idx = self.jump_if_true_opcode(idx, self.program, param_flags)
@@ -95,6 +101,7 @@ class Intcode_Computer():
                 self.equals_opcode(idx, self.program, param_flags)
                 idx += 4
             elif opcode == 99:
+                self.halted = True
                 break
 
         return self.output
