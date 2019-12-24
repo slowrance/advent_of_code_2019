@@ -19,21 +19,17 @@ def calc_signal(perms, initial):
             ic = Intcode_Computer(program)
             ic.phase = val
             amps.append(ic)
-        while not complete:
-            if complete:
-                break
-            for i, amp in enumerate(amps):
-                if i == 0 and first_pass:
-                    amp.add_input(0)
-                    first_pass = False
-                out = amp.run_program()
-                if amp.halted:
-                    complete = True
-                    break
-                if i != len(amps) - 1:
-                    amps[i+1].add_input(out)
-                elif i == len(amps):
-                    amps[0].add_input(out)
+
+        for i, amp in enumerate(amps):
+            if i == 0 and first_pass:
+                amp.add_input(0)
+                first_pass = False
+            out = amp.run_program()
+            if i != len(amps) - 1:
+                amps[i+1].add_input(out)
+
+                # elif i == len(amps):
+                #     amps[0].add_input(out)
         if out > max_signal:
             max_signal = out
             max_perm = perm
@@ -64,4 +60,4 @@ def test_139629729():
     perms = ([9,8,7,6,5],)
     calc_signal(perms, initial)
 
-test_139629729()
+
