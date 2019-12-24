@@ -1,13 +1,16 @@
+from collections import deque
+
 from aoc_common import read_opcodes, make_digits, decode_digits
 
 class Intcode_Computer():
 
     def __init__(self, program):
         self.program = program
-        self.inputs = []
+        self.inputs = deque()
         self.phase = -1
         self.halted = False
         self.idx = 0
+        self.next_comp = None
 
     def add_input(self, input):
         self.inputs.append(input)
@@ -36,11 +39,13 @@ class Intcode_Computer():
         if self.idx == 0:
             program[program[self.idx + 1]] = self.phase
         else:
-            program[program[self.idx + 1]] = self.inputs[0]
+            program[program[self.idx + 1]] = self.inputs.popleft()
 
     def output_opcode(self, program, param_flags):
         p1 = self.get_one_param(program, param_flags)
         self.output = p1
+        # self.next_comp.add_input(self.output)
+        # self.next_comp.run_program()
 
     def jump_if_true_opcode(self, program, param_flags):
         p1, p2 = self.get_two_params(program, param_flags)
@@ -80,6 +85,7 @@ class Intcode_Computer():
                 self.idx += 2
             elif opcode == 4:
                 self.output_opcode(self.program, param_flags)
+                self.next_comp.add_input(self.output)
                 self.idx += 2
             elif opcode == 5:
                 new_idx = self.jump_if_true_opcode(self.program, param_flags)
