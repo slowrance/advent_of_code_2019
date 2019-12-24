@@ -76,15 +76,17 @@ def count_detected(origin, asteroids):
 
 def destroy_targets(destroyed, targets):
     prev_target = (-1, -1, -1)
+    remaining = []
     for target in targets:
         if prev_target[1] == target[1]:
+            remaining.append(target)
             continue
         destroyed.append(target)
         print(target)
         prev_target = target
-        targets.remove(target)
+        # targets.remove(target)
 
-    return destroyed, targets
+    return destroyed, remaining
 
 max_detected = 0
 max_location = None
