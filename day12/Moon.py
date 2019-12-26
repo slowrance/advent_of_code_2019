@@ -49,5 +49,5 @@ class Moon():
         return f'PE = {self.pot_energy}; KE = {self.kin_energy}; Total Energy = {self.total_energy}'
 
     def curr_state(self):
-        return (self.x_pos, self.y_pos, self.z_pos), (self.x_vel, self.y_vel, self.z_vel)
+        return {'x': self.x_pos, 'y': self.y_pos, 'z': self.z_pos}
 
