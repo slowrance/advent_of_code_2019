@@ -35,20 +35,31 @@ def get_instructions(text):
     return instructions
 
 def get_components(text):
-    components = []
+    components = {}
     for line in text:
-        components.append(convert_line_to_Component(line))
+        component = convert_line_to_Component(line)
+        components[component.name] = component
     return components
 
-
+def part1(input):
+    # instructions = get_instructions(input)
+    components = get_components(input)
+    # ore_needed = 0
+    inventory = {component: 0 for component in components}
+    inventory['ORE'] = 0
+    inventory = components['FUEL'].create(1, inventory, components)
+    print(inventory)
+    return inventory
 
 test1_input = get_input('test1.txt')
-instructions = get_instructions(test1_input)
-components = get_components(test1_input)
-ore_needed = 0
-inventory = {component.name: 0 for component in components}
-inventory['ORE'] = 0
-inventory = components[2].create(1, inventory, components)
+test2_input = get_input('test2.txt')
 
-print(inventory)
+# test1_result = part1(test1_input)
+# assert test1_result['ORE'] == 31
+
+test2_result = part1(test2_input)
+assert test2_result['ORE'] == 165
+
+
+
 
