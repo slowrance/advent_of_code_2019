@@ -11,6 +11,8 @@ class Intcode_Computer():
         self.halted = False
         self.idx = 0
         self.next_comp = None
+        self.first_pass = True
+        self.output = 0
 
     def add_input(self, input):
         self.inputs.append(input)
@@ -36,16 +38,17 @@ class Intcode_Computer():
         program[program[self.idx + 3]] = p3
 
     def input_opcode(self, program):
-        if self.idx == 0:
+        if self.first_pass:
             program[program[self.idx + 1]] = self.phase
+            self.first_pass = False
         else:
             program[program[self.idx + 1]] = self.inputs.popleft()
 
     def output_opcode(self, program, param_flags):
+
         p1 = self.get_one_param(program, param_flags)
         self.output = p1
-        # self.next_comp.add_input(self.output)
-        # self.next_comp.run_program()
+
 
     def jump_if_true_opcode(self, program, param_flags):
         p1, p2 = self.get_two_params(program, param_flags)
@@ -81,6 +84,8 @@ class Intcode_Computer():
                 self.mul_opcode(self.program, param_flags)
                 self.idx += 4
             elif opcode == 3:
+                if len(self.inputs) == 0:
+                    break
                 self.input_opcode(self.program)
                 self.idx += 2
             elif opcode == 4:
@@ -112,4 +117,4 @@ class Intcode_Computer():
         return self.output
 
     def __repr__(self):
-        return f'Intcode_Computer({self.inputs})'
+        return f'Intcode_Computer({self.phase}, {self.inputs})'
