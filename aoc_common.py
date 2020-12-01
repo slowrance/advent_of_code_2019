@@ -19,11 +19,15 @@ def decode_digits(digits):
     p2 = None
     p3 = None
     opcode = int(''.join(digits[-2:]))
-    if len(digits) > 2:
-        p1 = int(digits[-3])
-    if len(digits) > 3:
-        p2 = int(digits[-4])
-    if len(digits) > 4:
-        p3 = int(digits[-5])
+    p1 = int(digits[-3]) if len(digits) > 2 else 0
+    p2 = int(digits[-4]) if len(digits) > 3 else 0
+    p3 = int(digits[-5]) if len(digits) > 4 else 0
+
+    # if len(digits) > 2:
+    #     p1 = int(digits[-3])
+    # if len(digits) > 3:
+    #     p2 = int(digits[-4])
+    # if len(digits) > 4:
+    #     p3 = int(digits[-5])
 
     return (opcode, (p1, p2, p3))
