@@ -70,18 +70,12 @@ class Intcode_Computer():
     def add_opcode(self, program, param_flags):
         p1, p2, p3 = self.get_params(program, param_flags)
         res = p1 + p2
-        # if p3:
-        #     location = p3
-        # else:
-        #     location = self.idx + 3
-        # program[program[self.idx + 3]] = res
         program[p3] = res
 
     def mul_opcode(self, program, param_flags):
-        p1, p2 = self.get_two_params(program, param_flags)
-        # program[program[idx + 3]] = program[program[idx + 1]] * program[program[idx + 2]]
-        p3 = p1 * p2
-        program[program[self.idx + 3]] = p3
+        p1, p2, p3 = self.get_params(program, param_flags)
+        res = p1 * p2
+        program[p3] = res
 
     def input_opcode(self, program, param_flags):
         if param_flags[0] == 0 or not param_flags[0]:
