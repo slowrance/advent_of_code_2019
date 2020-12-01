@@ -15,9 +15,9 @@ def test3():
     ic = Intcode_Computer(program)
     return ic.run_program()
 
-test1()
-test2()
-test3()
+# test1()
+# test2()
+# test3()
 
 
 def part1():

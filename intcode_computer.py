@@ -14,19 +14,19 @@ class Intcode_Computer():
         self.first_pass = True
         self.output = 0
         self.rel_offset = 0
-        for _ in range(10000):
+        for _ in range(100000):
             program.append(0)
 
     def add_input(self, input):
         self.inputs.append(input)
 
     def get_params(self, program, param_flags):
-        # p1 = program[self.idx + 1] if param_flags[0] else program[program[self.idx + 1]]
-        # p2 = program[self.idx + 2] if param_flags[1] else program[program[self.idx + 2]]
+
         vals = []
         for i in range(3):
-            # if param_flags[i] is None:
-            #     vals.append(program[self.idx + 1 + i])
+            if (self.idx + i + 1) >= len(program):
+                vals.append(0)
+                break
             if param_flags[i] == 0 or param_flags[i] is None:
                 if i == 2:
                     vals.append(program[self.idx + 1 + i])
@@ -42,30 +42,6 @@ class Intcode_Computer():
                     vals.append(program[val])
         p1, p2, p3 = vals
         return p1, p2, p3
-
-    def get_two_params(self, program, param_flags):
-        # p1 = program[self.idx + 1] if param_flags[0] else program[program[self.idx + 1]]
-        # p2 = program[self.idx + 2] if param_flags[1] else program[program[self.idx + 2]]
-        vals = []
-        for i in range(2):
-            if param_flags[i] == 0 or not param_flags[i]:
-                vals.append(program[program[self.idx + 1 + i]])
-            elif param_flags[i] == 1:
-                vals.append(program[self.idx + 1 + i])
-            elif param_flags[i] == 2:
-                vals.append(program[program[self.idx + 1 + i] + self.rel_offset])
-        p1, p2 = vals
-        return p1, p2
-
-    def get_one_param(self, program, param_flags):
-        if param_flags[0] == 0 or not param_flags[0]:
-            p1 = program[program[self.idx + 1]]
-        elif param_flags[0] == 1:
-            p1 = program[self.idx + 1]
-        elif param_flags[0] == 2:
-            p1 = program[program[self.idx + 1] + self.rel_offset]
-        # p1 = program[self.idx + 1] if param_flags[0] else program[program[self.idx + 1]]
-        return p1
 
     def add_opcode(self, program, param_flags):
         # opcode 1
@@ -95,13 +71,13 @@ class Intcode_Computer():
 
     def output_opcode(self, program, param_flags):
         # opcode 4
-        p1 = self.get_one_param(program, param_flags)
+        p1, p2, p3 = self.get_params(program, param_flags)
         self.output = p1
 
 
     def jump_if_true_opcode(self, program, param_flags):
         # opcode 5
-        p1, p2 = self.get_two_params(program, param_flags)
+        p1, p2, p3 = self.get_params(program, param_flags)
         if p1 != 0:
             return p2
         else:
@@ -109,7 +85,7 @@ class Intcode_Computer():
 
     def jump_if_false_opcode(self, program, param_flags):
         # opcode 6
-        p1, p2 = self.get_two_params(program, param_flags)
+        p1, p2, p3 = self.get_params(program, param_flags)
         if p1 == 0:
             return p2
         else:
@@ -129,7 +105,7 @@ class Intcode_Computer():
 
     def adj_rel_base_opcode(self, program, param_flags):
         # opcode 9
-        p1 = self.get_one_param(program, param_flags)
+        p1, p2, p3 = self.get_params(program, param_flags)
         self.rel_offset += p1
 
 
