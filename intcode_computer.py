@@ -68,16 +68,19 @@ class Intcode_Computer():
         return p1
 
     def add_opcode(self, program, param_flags):
+        # opcode 1
         p1, p2, p3 = self.get_params(program, param_flags)
         res = p1 + p2
         program[p3] = res
 
     def mul_opcode(self, program, param_flags):
+        # opcode 2
         p1, p2, p3 = self.get_params(program, param_flags)
         res = p1 * p2
         program[p3] = res
 
     def input_opcode(self, program, param_flags):
+        # opcode 3
         if param_flags[0] == 0 or not param_flags[0]:
             p1 = program[self.idx + 1]
         elif param_flags[0] == 1:
@@ -91,12 +94,13 @@ class Intcode_Computer():
             program[p1] = self.inputs.popleft()
 
     def output_opcode(self, program, param_flags):
-
+        # opcode 4
         p1 = self.get_one_param(program, param_flags)
         self.output = p1
 
 
     def jump_if_true_opcode(self, program, param_flags):
+        # opcode 5
         p1, p2 = self.get_two_params(program, param_flags)
         if p1 != 0:
             return p2
@@ -104,6 +108,7 @@ class Intcode_Computer():
             return False
 
     def jump_if_false_opcode(self, program, param_flags):
+        # opcode 6
         p1, p2 = self.get_two_params(program, param_flags)
         if p1 == 0:
             return p2
@@ -111,16 +116,19 @@ class Intcode_Computer():
             return False
 
     def less_than_opcode(self, program, param_flags):
-        p1, p2 = self.get_two_params(program, param_flags)
-        p3 = 1 if p1 < p2 else 0
-        program[program[self.idx + 3]] = p3
+        # opcode 7
+        p1, p2, p3 = self.get_params(program, param_flags)
+        res = 1 if p1 < p2 else 0
+        program[p3] = res
 
     def equals_opcode(self, program, param_flags):
-        p1, p2 = self.get_two_params(program, param_flags)
-        p3 = 1 if p1 == p2 else 0
-        program[program[self.idx + 3]] = p3
+        # opcode 8
+        p1, p2, p3 = self.get_params(program, param_flags)
+        res = 1 if p1 == p2 else 0
+        program[p3] = res
 
     def adj_rel_base_opcode(self, program, param_flags):
+        # opcode 9
         p1 = self.get_one_param(program, param_flags)
         self.rel_offset += p1
 
